@@ -235,7 +235,7 @@ defmodule OtelTests do
       raise RuntimeError, "my error message"
     rescue
       ex ->
-        assert Span.record_exception(s, ex, __STACKTRACE__)
+        assert Span.record_exception(s, ex, __STACKTRACE__, [map: %{user_id: 1}])
         assert Span.end_span(s)
 
         stacktrace = Exception.format_stacktrace(__STACKTRACE__)
@@ -245,7 +245,8 @@ defmodule OtelTests do
             [
               {"exception.type", "Elixir.RuntimeError"},
               {"exception.message", "my error message"},
-              {"exception.stacktrace", stacktrace}
+              {"exception.stacktrace", stacktrace},
+              map: %{user_id: 1}
             ],
             128,
             :infinity
